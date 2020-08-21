@@ -51,7 +51,7 @@ defmodule Support.RootChainHelper do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_start_exit)
-      |> Keyword.put(:value, @standard_exit_bond + @standard_exit_bounty)
+      |> Keyword.put(:value, @standard_exit_bond)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
     backend = Application.fetch_env!(:omg_eth, :eth_node)
@@ -70,7 +70,7 @@ defmodule Support.RootChainHelper do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_piggyback)
-      |> Keyword.put(:value, @piggyback_bond + @in_flight_exit_bounty)
+      |> Keyword.put(:value, @piggyback_bond)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
     signature = "piggybackInFlightExitOnInput((bytes,uint16))"
@@ -84,7 +84,7 @@ defmodule Support.RootChainHelper do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_piggyback)
-      |> Keyword.put(:value, @piggyback_bond + @in_flight_exit_bounty)
+      |> Keyword.put(:value, @piggyback_bond)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
 
