@@ -42,13 +42,16 @@ defmodule Support.RootChainHelper do
   @ife_bond 37_000_000_000_000_000
   @piggyback_bond 28_000_000_000_000_000
 
+  @standard_exit_bounty 42_800_000_000
+  @in_flight_exit_bounty 500_000_000_000
+
   @type in_flight_exit_piggybacked_event() :: %{owner: <<_::160>>, tx_hash: <<_::256>>, output_index: non_neg_integer}
 
   def start_exit(utxo_pos, tx_bytes, proof, from) do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_start_exit)
-      |> Keyword.put(:value, @standard_exit_bond)
+      |> Keyword.put(:value, @standard_exit_bond + @standard_exit_bounty)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
     backend = Application.fetch_env!(:omg_eth, :eth_node)
@@ -67,7 +70,7 @@ defmodule Support.RootChainHelper do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_piggyback)
-      |> Keyword.put(:value, @piggyback_bond)
+      |> Keyword.put(:value, @piggyback_bond + @in_flight_exit_bounty)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
     signature = "piggybackInFlightExitOnInput((bytes,uint16))"
@@ -81,7 +84,7 @@ defmodule Support.RootChainHelper do
     opts =
       @tx_defaults
       |> Keyword.put(:gas, @gas_piggyback)
-      |> Keyword.put(:value, @piggyback_bond)
+      |> Keyword.put(:value, @piggyback_bond + @in_flight_exit_bounty)
 
     contract = from_hex(Configuration.contracts().payment_exit_game)
 
