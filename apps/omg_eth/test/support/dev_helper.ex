@@ -32,7 +32,7 @@ defmodule Support.DevHelper do
 
   # about 4 Ethereum blocks on "realistic" networks, use to timeout synchronous operations in demos on testnets
   # NOTE: such timeout works only in dev setting; on mainnet one must track its transactions carefully
-  @about_4_blocks_time 60_000
+  @about_4_blocks_time 600_000
 
   @passphrase "ThisIsATestnetPassphrase"
 
