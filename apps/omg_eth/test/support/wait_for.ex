@@ -41,6 +41,7 @@ defmodule Support.WaitFor do
   This is low-level, consider using `|> Support.DevHelper.transact_sync!()` for eth-transactions' syncronicity in tests
   """
   def eth_receipt(txhash, timeout \\ 15_000) do
+    IO.inspect(txhash)
     f = fn ->
       txhash
       |> Encoding.to_hex()
