@@ -39,7 +39,7 @@ defmodule OMG.EthTest do
 
   test "get_block_timestamp_by_number/1 the block timestamp by block number" do
     {:ok, timestamp} = Eth.get_block_timestamp_by_number(2)
-    IO.inspect(authority_address)
+    IO.inspect(Configuration.authority_address())
     assert is_integer(timestamp)
   end
 
