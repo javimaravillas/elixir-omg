@@ -214,7 +214,7 @@ defmodule OMG.Eth.RootChain.AbiFunctionSelector do
       type: :function,
       # types: [array: {:uint, 160}]
       types: [
-        array: {:tuple, [:bool, {:uint, 256}, {:bytes, 32}, :address, {:uint, 256}, {:uint, 256}, {:uint, 256}]}
+        array: {:tuple, [:bool, {:uint, 256}, {:bytes, 32}, :address, {:uint, 256}, {:uint, 256}]}
       ]
     }
   end
