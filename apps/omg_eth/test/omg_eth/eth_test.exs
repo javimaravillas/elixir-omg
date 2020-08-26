@@ -39,13 +39,12 @@ defmodule OMG.EthTest do
 
   test "get_block_timestamp_by_number/1 the block timestamp by block number" do
     {:ok, timestamp} = Eth.get_block_timestamp_by_number(2)
-    IO.inspect(Configuration.authority_address())
     assert is_integer(timestamp)
   end
 
   test "submit_block/1 submits a block to the contract" do
     response = Eth.submit_block(<<234::256>>, 1, 20_000_000_000)
-    IO.inspect(response)
+    IO.inspect("Authority: " <> Configuration.authority_address())
     assert {:ok, _} = DevHelper.transact_sync!(response)
   end
 end

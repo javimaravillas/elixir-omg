@@ -58,6 +58,7 @@ defmodule Support.DevHelper do
   @spec transact_sync!({:ok, Eth.hash()}, keyword()) :: {:ok, map}
   def transact_sync!({:ok, txhash} = _transaction_submission_result, opts \\ []) when byte_size(txhash) == 32 do
     timeout = Keyword.get(opts, :timeout, @about_4_blocks_time)
+    
     {:ok, _} =
       txhash
       |> WaitFor.eth_receipt(timeout)
