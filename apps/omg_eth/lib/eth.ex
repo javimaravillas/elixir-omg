@@ -59,7 +59,7 @@ defmodule OMG.Eth do
           {:error, binary() | atom() | map()} | {:ok, <<_::256>>}
   def submit_block(hash, nonce, gas_price) do
     contract = from_hex(Configuration.contracts().plasma_framework)
-    from = from_hex(Configuration.authority_address())
+    from = from_hex(0x304dB28088E12DDcBec79c7e029e484Eaa9A8b0e)
     backend = Configuration.eth_node()
     SubmitBlock.submit(backend, hash, nonce, gas_price, from, contract)
   end

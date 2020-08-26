@@ -45,6 +45,7 @@ defmodule OMG.EthTest do
   test "submit_block/1 submits a block to the contract" do
     response = Eth.submit_block(<<234::256>>, 1, 20_000_000_000)
     IO.inspect("Authority: " <> Configuration.authority_address())
+    IO.inspect(response)
     assert {:ok, _} = DevHelper.transact_sync!(response)
   end
 end
