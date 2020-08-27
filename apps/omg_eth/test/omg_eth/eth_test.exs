@@ -25,6 +25,7 @@ defmodule OMG.EthTest do
   alias OMG.Eth
   alias OMG.Eth.Configuration
   alias Support.DevHelper
+  alias Support.WaitFor
 
   @moduletag :common
 
@@ -48,6 +49,8 @@ defmodule OMG.EthTest do
     IO.inspect("Plasma contract" <> Configuration.contracts().plasma_framework)
     response = {:ok, <<175, 250, 199, 33, 89, 86, 105, 186, 65, 248, 67, 62, 227, 123, 240, 175, 53,
   234, 109, 161, 157, 235, 4, 26, 149, 249, 234, 229, 122, 135, 211, 166>>}
+    {:ok, txhash} = response
+    WaitFor.eth_receipt(txhash)
     assert {:ok, _} = DevHelper.transact_sync!(response)
   end
 end
