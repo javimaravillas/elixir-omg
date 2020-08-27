@@ -43,10 +43,11 @@ defmodule OMG.EthTest do
   end
 
   test "submit_block/1 submits a block to the contract" do
-    response = Eth.submit_block(<<234::256>>, 1, 20_000_000_000)
+    # response = Eth.submit_block(<<234::256>>, 1, 20_000_000_000)
     IO.inspect("Authority: " <> Configuration.authority_address())
     IO.inspect("Plasma contract" <> Configuration.contracts().plasma_framework)
-    IO.inspect("Submit Block response: " <> response)
+    response = <<175, 250, 199, 33, 89, 86, 105, 186, 65, 248, 67, 62, 227, 123, 240, 175, 53,
+  234, 109, 161, 157, 235, 4, 26, 149, 249, 234, 229, 122, 135, 211, 166>>
     assert {:ok, _} = DevHelper.transact_sync!(response)
   end
 end
