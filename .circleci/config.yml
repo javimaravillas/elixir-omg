@@ -368,7 +368,7 @@ jobs:
       - docker_login
       - run:
           name: Standup Geth and Child Chain
-          command: docker-compose up geth childchain
+          command: docker-compose up geth childchain postgres
           background: true
       - run: sleep 240
       - run:
