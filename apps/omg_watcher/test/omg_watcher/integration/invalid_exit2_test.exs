@@ -93,5 +93,4 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
 
     IntegrationTest.wait_for_byzantine_events([], @timeout)
   end
-
 end
