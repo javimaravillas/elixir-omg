@@ -100,6 +100,21 @@ commands:
       - restore_cache:
           key: v2-mix-specs-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
 
+  install_deps:
+    description: Install linux dependencies
+    steps:
+      - run:
+          name: Install deps
+          command: |
+            set -e
+            sudo killall dpkg || true &&
+            sudo rm /var/lib/dpkg/lock || true &&
+            sudo rm /var/cache/apt/archives/lock || true &&
+            sudo dpkg --configure -a || true &&
+            sudo apt-get update &&
+            ./bin/setup
+          no_output_timeout: 2400
+
 jobs:
   barebuild:
     executor: metal
@@ -342,9 +357,14 @@ jobs:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
       - install_elixir
+      - install_deps
       - run:
           name: Compile
-          command: mix compile
+          command: |
+            set -e
+            make deps-elixir-omg
+            mix compile
+          no_output_timeout: 2400
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain
@@ -700,17 +720,7 @@ jobs:
           paths:
             - ~/.asdf
             - ~/.asdf-vm
-      - run:
-          name: Install deps
-          command: |
-            set -e
-            sudo killall dpkg || true &&
-            sudo rm /var/lib/dpkg/lock || true &&
-            sudo rm /var/cache/apt/archives/lock || true &&
-            sudo dpkg --configure -a || true &&
-            sudo apt-get update &&
-            ./bin/setup
-          no_output_timeout: 2400
+      - install_deps
       - run: make install-hex-rebar
       - restore_cache:
           key: v1-dev-release-cache-{{ checksum "mix.lock" }}
