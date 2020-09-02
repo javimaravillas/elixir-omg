@@ -325,11 +325,13 @@ jobs:
             fi
 
   watcher_mix_based_childchain:
-    executor: builder_pg_geth
+    machine:
+      image: ubuntu-1604:201903-01
     environment:
       MIX_ENV: test
     steps:
       - setup_elixir-omg_workspace
+      - install_elixir_and_check_docker_status
       - restore_cache:
           keys:
             - v2-mix-cache-test-compile-{{ checksum "mix.lock" }}-{{ .Branch }}-{{ .Revision }}
