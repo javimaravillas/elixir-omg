@@ -334,7 +334,6 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
-      - install_elixir
       - run:
           name: Setup data dir
           command: |
@@ -345,11 +344,12 @@ jobs:
           keys:
             - v2-mix-cache-test-compile-{{ checksum "mix.lock" }}-{{ .Branch }}-{{ .Revision }}
       - run:
-          name: Compile
-          command: mix compile
-      - run:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
+      - run:
+          name: Compile
+          command: mix compile
+      - install_elixir
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain
