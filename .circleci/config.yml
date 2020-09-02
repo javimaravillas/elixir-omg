@@ -369,6 +369,8 @@ jobs:
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain
+          background: true
+      - run: sleep 240
       - run:
           name: Integration Tests & Coveralls Part Watcher
           command: |
