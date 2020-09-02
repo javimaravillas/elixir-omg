@@ -324,6 +324,30 @@ jobs:
                 (retval=$? && curl -k https://coveralls.io/webhook?repo_token=$COVERALLS_REPO_TOKEN -d "payload[build_num]=$CIRCLE_WORKFLOW_WORKSPACE_ID&payload[status]=done" && exit $retval)
             fi
 
+  watcher_mix_based_childchain:
+    executor: builder_pg_geth
+    environment:
+      MIX_ENV: test
+    steps:
+      - setup_elixir-omg_workspace
+      - restore_cache:
+          keys:
+            - v2-mix-cache-test-compile-{{ checksum "mix.lock" }}-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: Compile
+          command: mix compile
+      - run:
+          name: Pull down snapshot
+          command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
+      - run:
+          name: Standup Geth and Child Chain
+          command: docker-compose up geth childchain
+      - run:
+          name: Integration Tests & Coveralls Part Watcher
+          command: |
+            mix test test/omg_watcher/integration/invalid_exit_test.exs --include mix_based_childchain   
+            mix test test/omg_watcher/integration/invalid_exit2_test.exs --include mix_based_childchain        
+
   watcher_info_coveralls_and_integration_tests:
     executor: builder_pg_geth
     environment:
@@ -960,6 +984,9 @@ workflows:
           requires: [build]
           filters: *all_branches_and_tags
       - property_tests:
+          requires: [build]
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain:
           requires: [build]
           filters: *all_branches_and_tags
       # Publish in case of master branch, version branches and version tags.
