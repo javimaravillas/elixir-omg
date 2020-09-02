@@ -365,6 +365,7 @@ jobs:
             make deps-elixir-omg
             mix compile
           no_output_timeout: 2400
+      - docker_login
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain
