@@ -67,7 +67,7 @@ commands:
       - run: make docker-watcher
       - run: make docker-watcher_info
 
-  install_elixir_and_check_docker_status:
+  check_docker_status:
     description: Installs elixir and checks if docker is healthy
     steps:
       - run:
@@ -75,6 +75,10 @@ commands:
           command: |
             docker image ls
             docker-compose ps
+
+  install_elixir:
+    description: Installs elixir and checks if docker is healthy
+    steps:
       - restore_cache:
           key: v2-asdf-install
       - run:
@@ -93,7 +97,6 @@ commands:
             - ~/.asdf
             - ~/.asdf-vm
       - run: make install-hex-rebar
-      - run: sh .circleci/status.sh
       - restore_cache:
           key: v2-mix-specs-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
 
@@ -331,7 +334,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
-      - install_elixir_and_check_docker_status
+      - install_elixir
       - run:
           name: Setup data dir
           command: |
@@ -527,7 +530,9 @@ jobs:
           command: |
             cd priv/cabbage
             make start_daemon_services-2 || (START_RESULT=$?; docker-compose logs; exit $START_RESULT;)
-      - install_elixir_and_check_docker_status
+      - check_docker_status
+      - install_elixir
+      - run: sh .circleci/status.sh
       - run:
           name: Run specs
           command: |
@@ -631,7 +636,9 @@ jobs:
           command: |
             cd priv/cabbage
             make start_daemon_services_reorg-2 || (START_RESULT=$?; docker-compose logs; exit $START_RESULT;)
-      - install_elixir_and_check_docker_status
+      - check_docker_status
+      - install_elixir
+      - run: sh .circleci/status.sh
       - run:
           name: Print watcher logs
           command: make cabbage-reorg-watcher-logs
