@@ -341,10 +341,10 @@ jobs:
       - run:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
+      - install_elixir
       - run:
           name: Compile
           command: mix compile
-      - install_elixir
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain
