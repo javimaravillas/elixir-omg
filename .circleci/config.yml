@@ -945,7 +945,7 @@ workflows:
       - integration_tests:
           requires: [build]
       - barebuild_macos
-      - test_barebone_release:
+      - test_barebone_release
   build-test-deploy:
     jobs:
       - build:
