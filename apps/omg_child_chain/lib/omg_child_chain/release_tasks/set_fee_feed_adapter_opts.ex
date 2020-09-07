@@ -22,7 +22,6 @@ defmodule OMG.ChildChain.ReleaseTasks.SetFeeFeedAdapterOpts do
 
   @app :omg_child_chain
   @config_key :fee_adapter
-  @env_fee_adapter "FEE_ADAPTER"
 
   def init(args) do
     args
@@ -33,7 +32,7 @@ defmodule OMG.ChildChain.ReleaseTasks.SetFeeFeedAdapterOpts do
     adapter_config = config[@app][@config_key]
 
     updated_config =
-      @env_fee_adapter
+      "FEE_ADAPTER"
       |> System.get_env()
       |> parse_adapter_value()
       |> case do

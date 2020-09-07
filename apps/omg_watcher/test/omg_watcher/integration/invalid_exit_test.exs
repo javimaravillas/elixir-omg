@@ -37,7 +37,7 @@ defmodule OMG.Watcher.Integration.InvalidExitTest do
   @tag fixtures: [:in_beam_watcher, :stable_alice, :token, :stable_alice_deposits]
   test "invalid_exit without a challenge raises unchallenged_exit after sla_margin had passed, can be challenged",
        %{stable_alice: alice, stable_alice_deposits: {deposit_blknum, _}} do
-    Process.sleep(11000)
+    Process.sleep(11_000)
 
     %{"blknum" => first_tx_blknum} =
       OMG.TestHelper.create_encoded([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 9}]) |> WatcherHelper.submit()
@@ -45,7 +45,7 @@ defmodule OMG.Watcher.Integration.InvalidExitTest do
     %{"blknum" => second_tx_blknum} =
       OMG.TestHelper.create_encoded([{first_tx_blknum, 0, 0, alice}], @eth, [{alice, 8}]) |> WatcherHelper.submit()
 
-    Process.sleep(11000)
+    Process.sleep(11_000)
     IntegrationTest.wait_for_block_fetch(second_tx_blknum, @timeout)
 
     %{"txbytes" => txbytes, "proof" => proof, "utxo_pos" => tx_utxo_pos} =

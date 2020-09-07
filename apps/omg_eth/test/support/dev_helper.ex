@@ -118,7 +118,7 @@ defmodule Support.DevHelper do
       {:ok, response} ->
         {:ok, response}
 
-      {:error, %{"code" => -32000, "message" => "account already exists"}} ->
+      {:error, %{"code" => -32_000, "message" => "account already exists"}} ->
         {:ok, "0x" <> Base.encode16(account.addr)}
     end
   end
