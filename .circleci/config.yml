@@ -946,7 +946,6 @@ workflows:
           requires: [build]
       - barebuild_macos
       - test_barebone_release:
-          requires: [build]
   build-test-deploy:
     jobs:
       - build:
@@ -956,7 +955,6 @@ workflows:
             tags:
               only: /.+/
       - test_barebone_release:
-          requires: [build]
           filters: *all_branches_and_tags
       - notify_services:
           requires: [deploy_watcher, deploy_watcher_info, deploy_child_chain]
@@ -984,13 +982,10 @@ workflows:
           requires: [build]
           filters: *all_branches_and_tags
       - test_docker_compose_release:
-          requires: [build]
           filters: *all_branches_and_tags
       - test_docker_compose_performance:
-          requires: [build]
           filters: *all_branches_and_tags
       - test_docker_compose_reorg:
-          requires: [build]
           filters: *all_branches_and_tags
       - audit_deps:
           requires: [build]
