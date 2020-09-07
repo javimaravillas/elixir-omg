@@ -358,8 +358,8 @@ jobs:
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
       - docker_login
       - run: |
-          echo "FEE_ADAPTER=file" >> .env
-          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> .env
+          echo "FEE_ADAPTER=file" >> localchain_contract_addresses.env
+          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> localchain_contract_addresses.env
       - run:
           name: Standup Geth and Child Chain
           environment:
