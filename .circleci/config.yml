@@ -357,7 +357,6 @@ jobs:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
       - install_elixir
-      - install_deps
       - docker_login
       - run:
           name: Standup Geth and Child Chain
@@ -366,6 +365,7 @@ jobs:
             FEE_SPECS_FILE_PATH: /dev-artifacts/fee_specs.test.json
           command: FEE_ADAPTER=file FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json docker-compose up geth childchain postgres
           background: true
+      - install_deps
       - run:
           name: Compile
           environment:
@@ -375,7 +375,6 @@ jobs:
             make deps-elixir-omg
             mix compile
           no_output_timeout: 2400
-      - run: sleep 240
       - run:
           name: Integration Tests & Coveralls Part Watcher
           command: |
