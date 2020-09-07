@@ -368,14 +368,17 @@ jobs:
       - docker_login
       - run:
           name: Standup Geth and Child Chain
+          environment:
+            FEE_ADAPTER: file
+            FEE_SPECS_FILE_PATH: /dev-artifacts/fee_specs.test.json
           command: docker-compose up geth childchain postgres
           background: true
       - run: sleep 240
       - run:
           name: Integration Tests & Coveralls Part Watcher
           command: |
-            mix test test/omg_watcher/integration/invalid_exit_test.exs --include mix_based_childchain   
-            mix test test/omg_watcher/integration/invalid_exit2_test.exs --include mix_based_childchain        
+            mix test test/omg_watcher/integration/invalid_exit_test.exs --include mix_based_child_chain
+            mix test test/omg_watcher/integration/invalid_exit2_test.exs --include mix_based_child_chain
 
   watcher_info_coveralls_and_integration_tests:
     executor: builder_pg_geth
