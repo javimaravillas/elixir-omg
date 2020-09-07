@@ -39,7 +39,13 @@ defmodule OMG.Eth.Fixtures do
   end
 
   deffixture contract(eth_node) do
-    :ok = eth_node
+    case System.get_env("DOCKER_GETH") do
+      "true" ->
+        :ok
+
+      _ ->
+        :ok = eth_node
+    end
 
     {:ok, true} =
       Ethereumex.HttpClient.request("personal_unlockAccount", ["0x6de4b3b9c28e9c3e84c2b2d3a875c947a84de68d", "", 0], [])

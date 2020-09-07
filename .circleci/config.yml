@@ -377,6 +377,8 @@ jobs:
           no_output_timeout: 2400
       - run:
           name: Integration Tests & Coveralls Part Watcher
+          environment:
+            DOCKER_GETH: true
           command: |
             mix test test/omg_watcher/integration/invalid_exit_test.exs --include mix_based_child_chain
             mix test test/omg_watcher/integration/invalid_exit2_test.exs --include mix_based_child_chain

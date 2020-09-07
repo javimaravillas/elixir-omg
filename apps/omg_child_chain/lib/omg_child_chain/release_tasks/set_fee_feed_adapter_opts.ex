@@ -65,7 +65,9 @@ defmodule OMG.ChildChain.ReleaseTasks.SetFeeFeedAdapterOpts do
   end
 
   defp configure_adapter(_not_feed_adapter) do
-    configure_adapter({OMG.ChildChain.Fees.FeedAdapter, opts: []})
+    adapter = {OMG.ChildChain.Fees.FeedAdapter, opts: []}
+    _ = Logger.info("CONFIGURATION: App: #{@app} Key: #{@config_key} Value: #{inspect(adapter)}.")
+    configure_adapter(adapter)
   end
 
   defp validate_integer(value) do
