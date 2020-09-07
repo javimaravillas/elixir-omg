@@ -358,14 +358,11 @@ jobs:
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
       - docker_login
       - run: |
-          echo "FEE_ADAPTER=file" >> localchain_contract_addresses.env
-          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> localchain_contract_addresses.env
+          echo "FEE_ADAPTER=file" >> fees_setup.env
+          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> fees_setup.env
       - run:
           name: Standup Geth and Child Chain
-          environment:
-            FEE_ADAPTER: file
-            FEE_SPECS_FILE_PATH: /dev-artifacts/fee_specs.test.json
-          command: FEE_ADAPTER=file FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json docker-compose up geth childchain postgres
+          command: docker-compose up geth childchain postgres
           background: true
       - install_elixir
       - install_deps
