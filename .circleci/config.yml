@@ -1014,7 +1014,6 @@ workflows:
           requires: [build]
           filters: *all_branches_and_tags
       - watcher_mix_based_childchain:
-          requires: [build]
           filters: *all_branches_and_tags
       # Publish in case of master branch, version branches and version tags.
       - publish_child_chain:
