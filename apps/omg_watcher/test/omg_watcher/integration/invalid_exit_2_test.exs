@@ -51,7 +51,7 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
       [{first_tx_blknum, 0, 0, alice}] |> OMG.TestHelper.create_encoded(@eth, [{alice, 8}]) |> WatcherHelper.submit()
 
     IntegrationTest.wait_for_block_fetch(second_tx_blknum, @timeout)
-    Process.sleep(10_000)
+    Process.sleep(15_000)
 
     exit_data = WatcherHelper.get_exit_data(first_tx_blknum, 0, 0)
     %{"txbytes" => txbytes, "proof" => proof, "utxo_pos" => tx_utxo_pos} = exit_data
