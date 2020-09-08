@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule OMG.Watcher.Integration.BlockGetterTest do
+defmodule OMG.Watcher.Integration.BlockGetter4Test do
   @moduledoc """
   This test is intended to be the major smoke/integration test of the Watcher
 
