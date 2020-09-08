@@ -27,9 +27,9 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
 
   require OMG.Utxo
 
-  import ExUnit.CaptureLog, only: [capture_log: 1]
-
   alias OMG.Eth
+  alias OMG.Eth.Configuration
+  alias OMG.State
   alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
   alias OMG.Watcher.Integration.BadChildChainServer
@@ -48,13 +48,15 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
   @tag fixtures: [:in_beam_watcher, :stable_alice, :token, :stable_alice_deposits, :test_server]
   test "transaction which is spending an exiting output after the `sla_margin` causes an unchallenged_exit event",
        %{stable_alice: alice, stable_alice_deposits: {deposit_blknum, _}, test_server: context} do
-    Process.sleep(11_000)
+    Process.sleep(12_000)
+    IO.inspect(deposit_blknum, label: "deposit_blknum")
     tx = OMG.TestHelper.create_encoded([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 9}])
     %{"blknum" => exit_blknum} = WatcherHelper.submit(tx)
 
     # Here we're preparing invalid block
     bad_tx = OMG.TestHelper.create_recovered([{exit_blknum, 0, 0, alice}], @eth, [{alice, 9}])
-    bad_block_number = 2_000
+
+    bad_block_number = deposit_blknum + Configuration.child_block_interval()
 
     %{hash: bad_block_hash, number: _, transactions: _} =
       bad_block = OMG.Block.hashed_txs_at([bad_tx], bad_block_number)
@@ -69,6 +71,7 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
     end)
 
     IntegrationTest.wait_for_block_fetch(exit_blknum, @timeout)
+    Process.sleep(10_000)
 
     %{
       "txbytes" => txbytes,

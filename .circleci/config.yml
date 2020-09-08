@@ -379,7 +379,7 @@ jobs:
             mix compile
           no_output_timeout: 2400
       # we don't need feefeed for this test so lets stop it to save on resources
-      - run: docker-compose down feefeed
+      - run: docker stop feefeed
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
