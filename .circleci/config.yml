@@ -358,8 +358,8 @@ jobs:
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
       - docker_login
       - run: |
-          echo "FEE_ADAPTER=file" >> fees_setup.env
-          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> fees_setup.env
+          echo -e "FEE_ADAPTER=file\n$(cat fees_setup.env)" > fees_setup.env
+          echo -e "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json\n$(cat fees_setup.env)" > fees_setup.env
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain postgres
