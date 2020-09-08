@@ -39,14 +39,16 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
     stable_alice: alice,
     stable_alice_deposits: {deposit_blknum, _}
   } do
+    Process.sleep(11_000)
+
     %{"txbytes" => deposit_txbytes, "proof" => deposit_proof, "utxo_pos" => deposit_utxo_pos} =
       WatcherHelper.get_exit_data(deposit_blknum, 0, 0)
 
     %{"blknum" => first_tx_blknum} =
-      OMG.TestHelper.create_encoded([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 9}]) |> WatcherHelper.submit()
+      [{deposit_blknum, 0, 0, alice}] |> OMG.TestHelper.create_encoded(@eth, [{alice, 9}]) |> WatcherHelper.submit()
 
     %{"blknum" => second_tx_blknum} =
-      OMG.TestHelper.create_encoded([{first_tx_blknum, 0, 0, alice}], @eth, [{alice, 8}]) |> WatcherHelper.submit()
+      [{first_tx_blknum, 0, 0, alice}] |> OMG.TestHelper.create_encoded(@eth, [{alice, 8}]) |> WatcherHelper.submit()
 
     IntegrationTest.wait_for_block_fetch(second_tx_blknum, @timeout)
 
@@ -54,11 +56,13 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
       WatcherHelper.get_exit_data(first_tx_blknum, 0, 0)
 
     {:ok, %{"status" => "0x1"}} =
-      RootChainHelper.start_exit(tx_utxo_pos, txbytes, proof, alice.addr)
+      tx_utxo_pos
+      |> RootChainHelper.start_exit(txbytes, proof, alice.addr)
       |> DevHelper.transact_sync!()
 
     {:ok, %{"status" => "0x1"}} =
-      RootChainHelper.start_exit(deposit_utxo_pos, deposit_txbytes, deposit_proof, alice.addr)
+      deposit_utxo_pos
+      |> RootChainHelper.start_exit(deposit_txbytes, deposit_proof, alice.addr)
       |> DevHelper.transact_sync!()
 
     IntegrationTest.wait_for_byzantine_events([%Event.InvalidExit{}.name, %Event.InvalidExit{}.name], @timeout)
@@ -67,8 +71,8 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
     challenge = WatcherHelper.get_exit_challenge(first_tx_blknum, 0, 0)
 
     assert {:ok, %{"status" => "0x1"}} =
-             RootChainHelper.challenge_exit(
-               challenge["exit_id"],
+             challenge["exit_id"]
+             |> RootChainHelper.challenge_exit(
                challenge["exiting_tx"],
                challenge["txbytes"],
                challenge["input_index"],
@@ -81,8 +85,8 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
     challenge_exit_deposit = WatcherHelper.get_exit_challenge(deposit_blknum, 0, 0)
 
     assert {:ok, %{"status" => "0x1"}} =
-             RootChainHelper.challenge_exit(
-               challenge_exit_deposit["exit_id"],
+             challenge_exit_deposit["exit_id"]
+             |> RootChainHelper.challenge_exit(
                challenge_exit_deposit["exiting_tx"],
                challenge_exit_deposit["txbytes"],
                challenge_exit_deposit["input_index"],
