@@ -52,9 +52,10 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
 
     IO.inspect(second_tx_blknum, label: "second_tx_blknum")
     IntegrationTest.wait_for_block_fetch(second_tx_blknum, @timeout)
+    Process.sleep(5000)
 
-    %{"txbytes" => txbytes, "proof" => proof, "utxo_pos" => tx_utxo_pos} =
-      WatcherHelper.get_exit_data(first_tx_blknum, 0, 0)
+    exit_data = WatcherHelper.get_exit_data(first_tx_blknum, 0, 0)
+    %{"txbytes" => txbytes, "proof" => proof, "utxo_pos" => tx_utxo_pos} = exit_data
 
     {:ok, %{"status" => "0x1"}} =
       tx_utxo_pos
