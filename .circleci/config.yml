@@ -362,6 +362,7 @@ jobs:
           echo -e "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json\n$(cat fees_setup.env)" > fees_setup.env
           echo "FEE_ADAPTER=file" >> fees_setup.env
           echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> fees_setup.env
+          cat fees_setup.env
       - run:
           name: Standup Geth and Child Chain
           command: docker-compose up geth childchain postgres
