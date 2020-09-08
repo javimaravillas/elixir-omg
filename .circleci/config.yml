@@ -383,8 +383,12 @@ jobs:
           environment:
             DOCKER_GETH: true
           command: |
-            mix test test/omg_watcher/integration/invalid_exit_test.exs --include mix_based_child_chain
-            mix test test/omg_watcher/integration/invalid_exit2_test.exs --include mix_based_child_chain
+            mix test test/omg_watcher/integration/invalid_exit_1_test --include mix_based_child_chain
+            mix test test/omg_watcher/integration/invalid_exit_2_test --include mix_based_child_chain
+            mix test test/omg_watcher/integration/block_getter_1_test.exs --include mix_based_child_chain
+            mix test test/omg_watcher/integration/block_getter_2_test.exs --include mix_based_child_chain
+            mix test test/omg_watcher/integration/block_getter_3_test.exs --include mix_based_child_chain
+            mix test test/omg_watcher/integration/block_getter_4_test.exs --include mix_based_child_chain
 
   # watcher_mix_based_childchain_2:
   #   machine:
