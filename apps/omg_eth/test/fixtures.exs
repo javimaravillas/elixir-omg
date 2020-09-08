@@ -29,6 +29,10 @@ defmodule OMG.Eth.Fixtures do
   @test_erc20_vault_id 2
 
   deffixture eth_node do
+    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
+    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
+    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
+
     case System.get_env("DOCKER_GETH") do
       "true" ->
         :ok
