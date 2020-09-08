@@ -27,8 +27,6 @@ defmodule OMG.Watcher.Integration.BlockGetter1Test do
 
   require OMG.Utxo
 
-  import ExUnit.CaptureLog, only: [capture_log: 1]
-
   alias OMG.Eth
   alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
@@ -43,12 +41,12 @@ defmodule OMG.Watcher.Integration.BlockGetter1Test do
 
   @moduletag :mix_based_child_chain
 
-  @moduletag timeout: 100_000
+  @moduletag timeout: 150_000
 
   @tag fixtures: [:in_beam_watcher, :stable_alice, :token, :stable_alice_deposits, :test_server]
   test "transaction which is spending an exiting output before the `sla_margin` causes an invalid_exit event only",
        %{stable_alice: alice, stable_alice_deposits: {deposit_blknum, _}, test_server: context} do
-    Process.sleep(11_000)
+    Process.sleep(12_000)
     tx = OMG.TestHelper.create_encoded([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 9}])
     %{"blknum" => exit_blknum} = WatcherHelper.submit(tx)
 
