@@ -39,7 +39,7 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
     stable_alice: alice,
     stable_alice_deposits: {deposit_blknum, _}
   } do
-    Process.sleep(11_000)
+    Process.sleep(12_000)
 
     %{"txbytes" => deposit_txbytes, "proof" => deposit_proof, "utxo_pos" => deposit_utxo_pos} =
       WatcherHelper.get_exit_data(deposit_blknum, 0, 0)
