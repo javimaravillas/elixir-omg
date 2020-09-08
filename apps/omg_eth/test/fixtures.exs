@@ -29,21 +29,17 @@ defmodule OMG.Eth.Fixtures do
   @test_erc20_vault_id 2
 
   deffixture eth_node do
-    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
-    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
-    IO.inspect(System.get_env("DOCKER_GETH"), label: "DOCKER_GETH")
-
     case System.get_env("DOCKER_GETH") do
-      "true" ->
-        :ok
-
-      _ ->
+      nil ->
         if Application.get_env(:omg_eth, :run_test_eth_dev_node, true) do
           {:ok, exit_fn} = DevNode.start()
 
           on_exit(exit_fn)
         end
 
+        :ok
+
+      _ ->
         :ok
     end
   end
