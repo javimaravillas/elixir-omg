@@ -48,7 +48,7 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
       [{deposit_blknum, 0, 0, alice}] |> OMG.TestHelper.create_encoded(@eth, [{alice, 9}]) |> WatcherHelper.submit()
 
     IO.inspect(first_tx_blknum, label: "first_tx_blknum")
-    Process.sleep(12_000)
+    Process.sleep(30_000)
 
     %{"blknum" => second_tx_blknum} =
       [{first_tx_blknum, 0, 0, alice}] |> OMG.TestHelper.create_encoded(@eth, [{alice, 8}]) |> WatcherHelper.submit()
