@@ -380,6 +380,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -394,6 +395,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -408,6 +410,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -422,6 +425,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -436,6 +440,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -450,6 +455,7 @@ jobs:
       MIX_ENV: test
     steps:
       - checkout
+      - setup_childchain
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
