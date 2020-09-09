@@ -376,8 +376,6 @@ jobs:
             make deps-elixir-omg
             mix compile
           no_output_timeout: 2400
-      # we don't need feefeed for this test so lets stop it to save on resources
-      - run: docker stop feefeed
       - run:
           name: Integration Tests & Coveralls Part Watcher
           environment:
@@ -657,7 +655,8 @@ jobs:
           command: |
             cd priv/perf
             make log-services
-      - install_elixir_and_check_docker_status
+      - install_elixir
+      - run: sh .circleci/status.sh
       - run:
           name: Run load test
           command: |
