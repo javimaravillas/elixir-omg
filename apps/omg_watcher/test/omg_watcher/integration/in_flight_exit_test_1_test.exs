@@ -67,7 +67,7 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
     # sanity check in-flight exit has started on root chain, wait for finality
     assert {:ok, [_, _]} = EthereumEventAggregator.in_flight_exit_started(0, ife_eth_height)
     exit_finality_margin = 12
-    DevHelper.wait_for_root_chain_block(ife_eth_height + exit_finality_margin + 1)
+    DevHelper.wait_for_root_chain_block(ife_eth_height + exit_finality_margin)
 
     # EVENTS DETECTION (tested in the other test, skipping)
     # Check if IFE is recognized (tested in the other test, skipping)
@@ -79,12 +79,12 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
     # we're unable to get the invalid challenge using `in_flight_exit.get_competitor`!
     # ...so we need to stich it together from some pieces we have:
     %{sigs: [competing_sig | _]} = tx2
-    competing_tx_input_txbytes = Transaction.Payment.new([], [{alice.addr, @eth, 10}]) |> Transaction.raw_txbytes()
-    competing_tx_input_utxo_pos = Utxo.position(deposit_blknum, 0, 0) |> Utxo.Position.encode()
+    competing_tx_input_txbytes = [] |> Transaction.Payment.new([{alice.addr, @eth, 10}]) |> Transaction.raw_txbytes()
+    competing_tx_input_utxo_pos = Utxo.Position.encode(Utxo.position(deposit_blknum, 0, 0))
 
     {:ok, %{"status" => "0x1", "blockNumber" => challenge_eth_height}} =
-      RootChainHelper.challenge_in_flight_exit_not_canonical(
-        competing_tx_input_txbytes,
+      competing_tx_input_txbytes
+      |> RootChainHelper.challenge_in_flight_exit_not_canonical(
         competing_tx_input_utxo_pos,
         raw_tx1_bytes,
         0,
@@ -97,7 +97,7 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
       )
       |> DevHelper.transact_sync!()
 
-    DevHelper.wait_for_root_chain_block(challenge_eth_height + exit_finality_margin + 1)
+    DevHelper.wait_for_root_chain_block(challenge_eth_height + exit_finality_margin)
 
     # existence of `invalid_ife_challenge` event
     # vanishing of `non_canonical_ife` event
@@ -136,15 +136,15 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
     get_prove_canonical_response = WatcherHelper.get_prove_canonical(raw_tx1_bytes)
 
     {:ok, %{"status" => "0x1", "blockNumber" => response_eth_height}} =
-      RootChainHelper.respond_to_non_canonical_challenge(
-        get_prove_canonical_response["in_flight_txbytes"],
+      get_prove_canonical_response["in_flight_txbytes"]
+      |> RootChainHelper.respond_to_non_canonical_challenge(
         get_prove_canonical_response["in_flight_tx_pos"],
         get_prove_canonical_response["in_flight_proof"],
         alice.addr
       )
       |> DevHelper.transact_sync!()
 
-    DevHelper.wait_for_root_chain_block(response_eth_height + exit_finality_margin + 1)
+    DevHelper.wait_for_root_chain_block(response_eth_height + exit_finality_margin)
 
     # dissapearing of `invalid_ife_challenge` event
     assert %{
@@ -161,8 +161,8 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
   end
 
   defp exit_in_flight(get_in_flight_exit_response, exiting_user) do
-    RootChainHelper.in_flight_exit(
-      get_in_flight_exit_response["in_flight_tx"],
+    get_in_flight_exit_response["in_flight_tx"]
+    |> RootChainHelper.in_flight_exit(
       get_in_flight_exit_response["input_txs"],
       get_in_flight_exit_response["input_utxos_pos"],
       get_in_flight_exit_response["input_txs_inclusion_proofs"],
