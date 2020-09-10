@@ -96,7 +96,7 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
             {:halt, :ok}
 
           _ ->
-            Process.sleep(100)
+            Process.sleep(1000)
             IO.inspect(result["byzantine_events"])
             {:cont, acc + x}
         end
@@ -236,7 +236,7 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
             {:halt, :ok}
 
           _ ->
-            Process.sleep(100)
+            Process.sleep(1000)
             IO.inspect(result["byzantine_events"])
             {:cont, acc + x}
         end
