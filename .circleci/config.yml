@@ -415,6 +415,7 @@ jobs:
           command: |
             [ -d data ] || mkdir data && chmod 777 data
       - setup_remote_docker
+      - run: whoami
       - run:
           name: Install Docker Compose
           command: |
