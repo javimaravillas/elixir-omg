@@ -111,7 +111,21 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
     DevHelper.wait_for_root_chain_block(challenge_eth_height + exit_finality_margin + 1)
 
     # vanishing of `non_canonical_ife` event
-    assert %{"byzantine_events" => [%{"event" => "piggyback_available"}]} = WatcherHelper.success?("/status.get")
+    :ok =
+      Enum.reduce_while(1..100, 0, fn x, acc ->
+        result = WatcherHelper.success?("/status.get")
+        events = [%{"event" => "piggyback_available"}]
+
+        case result do
+          %{"byzantine_events" => ^events} ->
+            assert %{"byzantine_events" => [%{"event" => "piggyback_available"}]} = result
+            {:halt, :ok}
+
+          _ ->
+            Process.sleep(100)
+            {:cont, acc + x}
+        end
+      end)
   end
 
   @tag fixtures: [:in_beam_watcher, :alice, :bob, :mix_based_child_chain, :token, :alice_deposits]
@@ -174,14 +188,36 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
     DevHelper.wait_for_root_chain_block(challenge_eth_height + exit_finality_margin + 1)
 
     # existence of `invalid_ife_challenge` event
-    assert %{
-             "byzantine_events" => [
-               # this is the tx2's non-canonical-ife which we leave as is
-               %{"event" => "non_canonical_ife"},
-               %{"event" => "invalid_ife_challenge"},
-               %{"event" => "piggyback_available"}
-             ]
-           } = WatcherHelper.success?("/status.get")
+    # vanishing of `non_canonical_ife` event
+    :ok =
+      Enum.reduce_while(1..100, 0, fn x, acc ->
+        result = WatcherHelper.success?("/status.get")
+
+        events = [
+          # this is the tx2's non-canonical-ife which we leave as is
+          %{"event" => "non_canonical_ife"},
+          %{"event" => "invalid_ife_challenge"},
+          %{"event" => "piggyback_available"}
+        ]
+
+        case result do
+          %{"byzantine_events" => ^events} ->
+            assert %{
+                     "byzantine_events" => [
+                       # this is the tx2's non-canonical-ife which we leave as is
+                       %{"event" => "non_canonical_ife"},
+                       %{"event" => "invalid_ife_challenge"},
+                       %{"event" => "piggyback_available"}
+                     ]
+                   } = result
+
+            {:halt, :ok}
+
+          _ ->
+            Process.sleep(100)
+            {:cont, acc + x}
+        end
+      end)
 
     # now included IFE transaction tx1 is challenged and non-canonical, let's respond
     get_prove_canonical_response = WatcherHelper.get_prove_canonical(raw_tx1_bytes)
