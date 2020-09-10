@@ -72,13 +72,34 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
 
     # existence of competitors detected by checking if `non_canonical_ife` events exists
     # Also, there should be piggybacks on input/output available
-    assert %{
-             "byzantine_events" => [
-               # only a single non_canonical event, since on of the IFE tx is included!
-               %{"event" => "non_canonical_ife"},
-               %{"event" => "piggyback_available"}
-             ]
-           } = WatcherHelper.success?("/status.get")
+
+    :ok =
+      Enum.reduce_while(1..100, 0, fn x, acc ->
+        result = WatcherHelper.success?("/status.get")
+
+        events = [
+          # only a single non_canonical event, since on of the IFE tx is included!
+          %{"event" => "non_canonical_ife"},
+          %{"event" => "piggyback_available"}
+        ]
+
+        case result do
+          %{"byzantine_events" => ^events} ->
+            assert %{
+                     "byzantine_events" => [
+                       # only a single non_canonical event, since on of the IFE tx is included!
+                       %{"event" => "non_canonical_ife"},
+                       %{"event" => "piggyback_available"}
+                     ]
+                   } = result
+
+            {:halt, :ok}
+
+          _ ->
+            Process.sleep(100)
+            {:cont, acc + x}
+        end
+      end)
 
     # Check if IFE is recognized as IFE by watcher (kept separate from the above for readability)
     assert %{"in_flight_exits" => [%{}, %{}]} = WatcherHelper.success?("/status.get")
@@ -215,6 +236,7 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
 
           _ ->
             Process.sleep(100)
+            IO.inspect(acc + x)
             {:cont, acc + x}
         end
       end)
