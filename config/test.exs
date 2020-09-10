@@ -1,4 +1,5 @@
 use Mix.Config
+ethereum_events_check_interval_ms = 400
 
 parse_contracts = fn ->
   local_umbrella_path = Path.join([File.cwd!(), "../../", "localchain_contract_addresses.env"])
@@ -46,7 +47,7 @@ config :omg_utils,
 
 config :omg,
   deposit_finality_margin: 1,
-  ethereum_events_check_interval_ms: 10,
+  ethereum_events_check_interval_ms: ethereum_events_check_interval_ms,
   coordinator_eth_height_check_interval_ms: 10,
   environment: :test,
   fee_claimer_address: Base.decode16!("DEAD000000000000000000000000000000000000")
@@ -95,7 +96,7 @@ config :omg_eth,
   },
   node_logging_in_debug: true,
   # Lower the event check interval too low and geth will die
-  ethereum_events_check_interval_ms: 400,
+  ethereum_events_check_interval_ms: ethereum_events_check_interval_ms,
   min_exit_period_seconds: 22,
   ethereum_block_time_seconds: 1,
   eth_node: :geth,
