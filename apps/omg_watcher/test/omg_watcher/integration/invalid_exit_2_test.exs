@@ -29,7 +29,7 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
   require Utxo
 
   @moduletag :mix_based_child_chain
-  @moduletag timeout: 180_000
+  @moduletag timeout: 240_000
 
   @timeout 40_000
   @eth OMG.Eth.zero_address()
