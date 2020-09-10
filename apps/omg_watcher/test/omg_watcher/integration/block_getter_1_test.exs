@@ -67,7 +67,7 @@ defmodule OMG.Watcher.Integration.BlockGetter1Test do
     end)
 
     IntegrationTest.wait_for_block_fetch(exit_blknum, @timeout)
-    Process.sleep(5000)
+    Process.sleep(12_000)
 
     %{
       "txbytes" => txbytes,
