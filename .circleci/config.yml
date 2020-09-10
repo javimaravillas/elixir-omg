@@ -1047,18 +1047,18 @@ workflows:
       - property_tests:
           requires: [build]
           filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_1:
-          filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_2:
-          filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_3:
-          filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_4:
-          filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_5:
-          filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_6:
-          filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_1:
+      #     filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_2:
+      #     filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_3:
+      #     filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_4:
+      #     filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_5:
+      #     filters: *all_branches_and_tags
+      # - watcher_mix_based_childchain_6:
+      #     filters: *all_branches_and_tags
       - publish_watcher:
           requires:
             [
