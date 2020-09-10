@@ -405,7 +405,7 @@ jobs:
 
   watcher_mix_based_childchain_22:
     docker:
-      image: omisegoimages/elixir-omg-builder:stable-20200410
+      - image: omisegoimages/elixir-omg-builder:stable-20200410
     environment:
       MIX_ENV: test
     steps:
