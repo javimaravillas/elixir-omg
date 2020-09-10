@@ -414,13 +414,13 @@ jobs:
           name: Setup data dir
           command: |
             [ -d data ] || mkdir data && chmod 777 data
+      - setup_remote_docker
       - run:
           name: Install Docker Compose
           command: |
             set -x
             sudo curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
-      - setup_remote_docker
       - run:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
