@@ -666,6 +666,7 @@ jobs:
             mix do credo, format --check-formatted --dry-run
 
   test_docker_compose_performance:
+    description: "These are not actually performance tests, we're checking if the scripts work"
     machine:
       image: ubuntu-1604:201903-01
     steps:

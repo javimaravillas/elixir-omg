@@ -28,7 +28,6 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
   require OMG.Utxo
 
   alias OMG.Eth
-  alias OMG.Eth.Configuration
   alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
   alias OMG.Watcher.Integration.BadChildChainServer
@@ -48,14 +47,14 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
   test "transaction which is spending an exiting output after the `sla_margin` causes an unchallenged_exit event",
        %{stable_alice: alice, stable_alice_deposits: {deposit_blknum, _}, test_server: context} do
     Process.sleep(12_000)
-    IO.inspect(deposit_blknum, label: "deposit_blknum")
+
     tx = OMG.TestHelper.create_encoded([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 9}])
     %{"blknum" => exit_blknum} = WatcherHelper.submit(tx)
 
     # Here we're preparing invalid block
     bad_tx = OMG.TestHelper.create_recovered([{exit_blknum, 0, 0, alice}], @eth, [{alice, 9}])
 
-    bad_block_number = deposit_blknum + Configuration.child_block_interval()
+    bad_block_number = 2_000
 
     %{hash: bad_block_hash, number: _, transactions: _} =
       bad_block = OMG.Block.hashed_txs_at([bad_tx], bad_block_number)
@@ -93,6 +92,7 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
     # checking if both machines and humans learn about the byzantine condition
     assert WatcherHelper.capture_log(fn ->
              # Here we're manually submitting invalid block to the root chain
+             # THIS IS CHILDCHAIN CODE
              {:ok, _} = Eth.submit_block(bad_block_hash, 2, 1)
 
              IntegrationTest.wait_for_byzantine_events(

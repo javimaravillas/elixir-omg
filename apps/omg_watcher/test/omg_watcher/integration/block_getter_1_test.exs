@@ -67,7 +67,6 @@ defmodule OMG.Watcher.Integration.BlockGetter1Test do
     end)
 
     IntegrationTest.wait_for_block_fetch(exit_blknum, @timeout)
-    Process.sleep(5000)
 
     %{
       "txbytes" => txbytes,
@@ -83,6 +82,8 @@ defmodule OMG.Watcher.Integration.BlockGetter1Test do
         alice.addr
       )
       |> DevHelper.transact_sync!()
+
+    # THIS IS CHILDCHAIN CODE
 
     # Here we're manually submitting invalid block to the root chain
     # NOTE: this **must** come after `start_exit` is mined (see just above) but still not later than
