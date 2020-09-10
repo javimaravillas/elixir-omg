@@ -59,11 +59,14 @@ defmodule OMG.Watcher.Integration.InvalidExit2Test do
 
     exit_data = WatcherHelper.get_exit_data(first_tx_blknum, 0, 0)
     %{"txbytes" => txbytes, "proof" => proof, "utxo_pos" => tx_utxo_pos} = exit_data
+    IO.inspect("start_exit1")
 
     {:ok, %{"status" => "0x1"}} =
       tx_utxo_pos
       |> RootChainHelper.start_exit(txbytes, proof, alice.addr)
       |> DevHelper.transact_sync!()
+
+    IO.inspect("start_exit2")
 
     {:ok, %{"status" => "0x1"}} =
       deposit_utxo_pos
