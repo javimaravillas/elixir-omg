@@ -30,9 +30,7 @@ defmodule OMG.Watcher.Integration.BlockGetter3Test do
   import ExUnit.CaptureLog, only: [capture_log: 1]
 
   alias OMG.Eth
-  alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
-  alias OMG.Watcher.Integration.BadChildChainServer
   alias OMG.Watcher.Integration.TestHelper, as: IntegrationTest
   alias Support.DevHelper
   alias Support.RootChainHelper

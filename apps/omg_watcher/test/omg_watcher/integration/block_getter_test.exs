@@ -27,15 +27,11 @@ defmodule OMG.Watcher.Integration.BlockGetterTest do
 
   require OMG.Utxo
 
-  import ExUnit.CaptureLog, only: [capture_log: 1]
-
   alias OMG.Eth
   alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
   alias OMG.Watcher.Integration.BadChildChainServer
   alias OMG.Watcher.Integration.TestHelper, as: IntegrationTest
-  alias Support.DevHelper
-  alias Support.RootChainHelper
   alias Support.WatcherHelper
 
   @timeout 40_000
@@ -101,11 +97,5 @@ defmodule OMG.Watcher.Integration.BlockGetterTest do
              {:ok, _txhash} = Eth.submit_block(invalid_block_hash, 1, 20_000_000_000)
              IntegrationTest.wait_for_byzantine_events([%Event.InvalidBlock{}.name], @timeout)
            end) =~ inspect(:tx_execution)
-  end
-
-  defp get_next_blknum_nonce(blknum) do
-    child_block_interval = Application.fetch_env!(:omg_eth, :child_block_interval)
-    next_blknum = blknum + child_block_interval
-    {next_blknum, trunc(next_blknum / child_block_interval)}
   end
 end

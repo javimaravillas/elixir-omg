@@ -403,53 +403,6 @@ jobs:
           command: |
             mix test test/omg_watcher/integration/invalid_exit_2_test.exs --include mix_based_child_chain
 
-  watcher_mix_based_childchain_22:
-    docker:
-      - image: omisegoimages/elixir-omg-builder:stable-20200410
-    environment:
-      MIX_ENV: test
-    steps:
-      - checkout
-      - run:
-          name: Setup data dir
-          command: |
-            [ -d data ] || mkdir data && chmod 777 data
-      - setup_remote_docker
-      - run: whoami
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - run:
-          name: Pull down snapshot
-          command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
-      - docker_login
-      - run: |
-          echo -e "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json\n$(cat fees_setup.env)" > fees_setup.env
-          echo "FEE_SPECS_FILE_PATH=/dev-artifacts/fee_specs.test.json" >> fees_setup.env
-          cat fees_setup.env
-      - run:
-          name: Standup Geth and Child Chain
-          command: docker-compose up geth childchain postgres
-          background: true
-      - run:
-          name: Compile
-          environment:
-            MIX_ENV: test
-          command: |
-            set -e
-            make deps-elixir-omg
-            mix compile
-          no_output_timeout: 2400
-      - run:
-          name: Integration Tests & Coveralls Part Watcher
-          environment:
-            DOCKER_GETH: true
-          command: |
-            mix test test/omg_watcher/integration/invalid_exit_2_test.exs --include mix_based_child_chain
-
   watcher_mix_based_childchain_3:
     machine:
       image: ubuntu-1604:201903-01
@@ -918,16 +871,6 @@ jobs:
             cd priv/cabbage
             mix test
 
-  publish_child_chain:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      CHILD_CHAIN_IMAGE_NAME: "omisego/child_chain"
-    steps:
-      - checkout
-      - run: make docker-child_chain CHILD_CHAIN_IMAGE_NAME=$CHILD_CHAIN_IMAGE_NAME
-      - run: IMAGE_NAME=$CHILD_CHAIN_IMAGE_NAME sh .circleci/ci_publish.sh
-
   publish_watcher:
     machine:
       image: ubuntu-1604:201903-01
@@ -993,12 +936,6 @@ jobs:
     steps:
       - checkout
       - run: sh .circleci/ci_increase_chart_version.sh
-
-  deploy_child_chain:
-    executor: deployer
-    steps:
-      - checkout
-      - run: DEPLOY=child_chain sh .circleci/ci_deploy.sh
 
   deploy_watcher:
     executor: deployer
@@ -1088,7 +1025,7 @@ workflows:
       - test_barebone_release:
           filters: *all_branches_and_tags
       - notify_services:
-          requires: [deploy_watcher, deploy_watcher_info, deploy_child_chain]
+          requires: [deploy_watcher, deploy_watcher_info]
           filters:
             branches:
               only:
@@ -1143,8 +1080,6 @@ workflows:
           filters: *all_branches_and_tags
       - watcher_mix_based_childchain_2:
           filters: *all_branches_and_tags
-      - watcher_mix_based_childchain_22:
-          filters: *all_branches_and_tags
       - watcher_mix_based_childchain_3:
           filters: *all_branches_and_tags
       - watcher_mix_based_childchain_4:
@@ -1153,29 +1088,6 @@ workflows:
           filters: *all_branches_and_tags
       - watcher_mix_based_childchain_6:
           filters: *all_branches_and_tags
-      - publish_child_chain:
-          requires:
-            [
-              child_chain_coveralls_and_integration_tests,
-              watcher_coveralls_and_integration_tests,
-              watcher_info_coveralls_and_integration_tests,
-              common_coveralls_and_integration_tests,
-              test,
-              property_tests,
-              dialyzer,
-              lint,
-              lint_version,
-              audit_deps
-            ]
-          filters: &master_and_version_branches_and_all_tags
-            branches:
-              only:
-                - master
-                # vMAJOR.MINOR (e.g. v0.1, v0.2, v1.0, v2.1, etc.)
-                - /^v[0-9]+\.[0-9]+/
-            tags:
-              only:
-                - /.+/
       - publish_watcher:
           requires:
             [
@@ -1207,27 +1119,21 @@ workflows:
             ]
           filters: *master_and_version_branches_and_all_tags
       # Release deploy to development in case of master branch.
-      - deploy_child_chain:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
-          filters:
-            branches:
-              only:
-                - master
       - deploy_watcher:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
+          requires: [publish_watcher, publish_watcher_info]
           filters:
             branches:
               only:
                 - master
       - deploy_watcher_info:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
+          requires: [publish_watcher, publish_watcher_info]
           filters:
             branches:
               only:
                 - master
       # Increase chart version for new release
       - increase_chart_version_childchain:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
+          requires: [publish_watcher, publish_watcher_info]
           filters: &only_release_tag
             branches:
               ignore: /.*/
@@ -1236,8 +1142,8 @@ workflows:
                 # eg. v1.0.3-pre.0, v1.0.3, ...
                 - /^v[0-9]+\.[0-9]+\.[0-9]+.*/
       - increase_chart_version_watcher:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
+          requires: [publish_watcher, publish_watcher_info]
           filters: *only_release_tag
       - increase_chart_version_watcher_info:
-          requires: [publish_child_chain, publish_watcher, publish_watcher_info]
+          requires: [publish_watcher, publish_watcher_info]
           filters: *only_release_tag
