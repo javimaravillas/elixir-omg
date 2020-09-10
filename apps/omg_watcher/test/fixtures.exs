@@ -74,6 +74,11 @@ defmodule OMG.Watcher.Fixtures do
     :ok = db_initialized
     _ = contract
 
+    case System.get_env("DOCKER_GETH") do
+      nil -> :ok
+      _ -> Application.put_env(:omg_watcher, :exit_finality_margin, 12)
+    end
+
     {:ok, started_apps} = Application.ensure_all_started(:omg_db)
     {:ok, started_security_watcher} = Application.ensure_all_started(:omg_watcher)
     {:ok, started_watcher_api} = Application.ensure_all_started(:omg_watcher_rpc)
