@@ -438,6 +438,36 @@ jobs:
           command: |
             mix test test/omg_watcher/integration/block_getter_4_test.exs --include mix_based_child_chain
 
+  watcher_mix_based_childchain_7:
+      machine:
+        image: ubuntu-1604:201903-01
+      environment:
+        MIX_ENV: test
+      steps:
+        - checkout
+        - setup_childchain
+        - run:
+            name: Integration Tests & Coveralls Part Watcher
+            environment:
+              DOCKER_GETH: true
+            command: |
+              mix test test/omg_watcher/integration/in_flight_exit_test_1_test.exs --include mix_based_child_chain
+
+  watcher_mix_based_childchain_8:
+      machine:
+        image: ubuntu-1604:201903-01
+      environment:
+        MIX_ENV: test
+      steps:
+        - checkout
+        - setup_childchain
+        - run:
+            name: Integration Tests & Coveralls Part Watcher
+            environment:
+              DOCKER_GETH: true
+            command: |
+              mix test test/omg_watcher/integration/in_flight_exit_test_2_test.exs --include mix_based_child_chain
+
   watcher_info_coveralls_and_integration_tests:
     executor: builder_pg_geth
     environment:
@@ -1047,18 +1077,22 @@ workflows:
       - property_tests:
           requires: [build]
           filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_1:
-      #     filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_2:
-      #     filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_3:
-      #     filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_4:
-      #     filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_5:
-      #     filters: *all_branches_and_tags
-      # - watcher_mix_based_childchain_6:
-      #     filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_1:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_2:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_3:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_4:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_5:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_6:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_7:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_8:
+          filters: *all_branches_and_tags
       - publish_watcher:
           requires:
             [
