@@ -420,7 +420,7 @@ jobs:
           command: |
             curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
             chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+            mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
           name: Pull down snapshot
           command: SNAPSHOT=SNAPSHOT_MIX_EXIT_PERIOD_SECONDS_20 make init_test
