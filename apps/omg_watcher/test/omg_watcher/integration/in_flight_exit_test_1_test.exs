@@ -66,7 +66,7 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
     {:ok, %{"status" => "0x1", "blockNumber" => ife_eth_height}} = exit_in_flight(ife2, alice)
     # sanity check in-flight exit has started on root chain, wait for finality
     assert {:ok, [_, _]} = EthereumEventAggregator.in_flight_exit_started(0, ife_eth_height)
-    exit_finality_margin = Application.fetch_env!(:omg_watcher, :exit_finality_margin)
+    exit_finality_margin = 12
     DevHelper.wait_for_root_chain_block(ife_eth_height + exit_finality_margin + 1)
 
     # EVENTS DETECTION (tested in the other test, skipping)
@@ -127,7 +127,7 @@ defmodule OMG.Watcher.Integration.InFlightExit1Test do
 
           _ ->
             Process.sleep(1000)
-            IO.inspect(result["byzantine_events"])
+
             {:cont, acc + x}
         end
       end)
