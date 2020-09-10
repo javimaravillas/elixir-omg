@@ -29,7 +29,6 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
 
   alias OMG.Eth
   alias OMG.Eth.Configuration
-  alias OMG.State
   alias OMG.Watcher.BlockGetter
   alias OMG.Watcher.Event
   alias OMG.Watcher.Integration.BadChildChainServer
@@ -38,7 +37,7 @@ defmodule OMG.Watcher.Integration.BlockGetter2Test do
   alias Support.RootChainHelper
   alias Support.WatcherHelper
 
-  @timeout 40_000
+  @timeout 60_000
   @eth OMG.Eth.zero_address()
 
   @moduletag :mix_based_child_chain
