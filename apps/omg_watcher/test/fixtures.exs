@@ -140,7 +140,7 @@ defmodule OMG.Watcher.Fixtures do
       stdout: :stream,
       cd: [Mix.Project.build_path(), "../../"] |> Path.join() |> Path.expand(),
       env: %{"MIX_ENV" => to_string(Mix.env())},
-      # group 0 will create a new process group, equal to the OS pid of that process	
+      # group 0 will create a new process group, equal to the OS pid of that process
       group: 0,
       kill_group: true
     ]
@@ -165,7 +165,7 @@ defmodule OMG.Watcher.Fixtures do
     Task.async(fn -> Enum.each(child_chain_out, &log_output("child_chain", &1)) end)
 
     on_exit(fn ->
-      # NOTE see DevGeth.stop/1 for details	
+      # NOTE see DevGeth.stop/1 for details
       _ = Process.monitor(child_chain_proc)
 
       :ok =
@@ -191,7 +191,7 @@ defmodule OMG.Watcher.Fixtures do
   end
 
   defp wait_for_start(outstream, look_for, timeout, logger_fn) do
-    # Monitors the stdout coming out of a process for signal of successful startup	
+    # Monitors the stdout coming out of a process for signal of successful startup
     waiting_task_function = fn ->
       outstream
       |> Stream.map(logger_fn)

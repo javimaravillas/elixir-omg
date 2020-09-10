@@ -68,7 +68,7 @@ defmodule Support.DevHelper do
 
         {:ok, %{"status" => "0x0"} = receipt} ->
           case get_reason(txhash) do
-            "Exit queue exists" -> {:ok, Map.update!(receipt, "blockNumber", &int_from_hex(&1))}
+            # "Exit queue exists" -> {:ok, Map.update!(receipt, "blockNumber", &int_from_hex(&1))}
             reason -> {:error, Map.put(receipt, "reason", reason)}
           end
 

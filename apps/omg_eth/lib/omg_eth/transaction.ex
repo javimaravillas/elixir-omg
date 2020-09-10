@@ -32,7 +32,6 @@ defmodule OMG.Eth.Transaction do
 
   defp transact(:geth, txmap) do
     eth_send_transaction = Ethereumex.HttpClient.eth_send_transaction(txmap)
-    IO.inspect(eth_send_transaction, label: "eth_send_transaction")
 
     case eth_send_transaction do
       {:ok, receipt_enc} -> {:ok, Encoding.from_hex(receipt_enc)}
