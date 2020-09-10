@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule OMG.Watcher.Integration.InFlightExitTest do
+defmodule OMG.Watcher.Integration.InFlightExit1Test do
   @moduledoc """
   This needs to go away real soon.
   """
