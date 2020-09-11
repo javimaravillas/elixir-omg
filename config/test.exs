@@ -134,6 +134,7 @@ config :omg_watcher, child_chain_url: "http://localhost:9656"
 config :omg_watcher,
   # NOTE `exit_processor_sla_margin` can't be made shorter. At 8 it sometimes
   # causes unchallenged exits events because `geth --dev` is too fast
+  # Chaning this value for dockerized geth in OMG.Watcher.Fixtures!!!
   exit_processor_sla_margin: 10,
   # this means we allow the `sla_margin` above be larger than the `min_exit_period`
   exit_processor_sla_margin_forced: true,
