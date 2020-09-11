@@ -468,6 +468,21 @@ jobs:
             command: |
               mix test test/omg_watcher/integration/in_flight_exit_test_2_test.exs --include mix_based_child_chain
 
+  watcher_mix_based_childchain_9:
+      machine:
+        image: ubuntu-1604:201903-01
+      environment:
+        MIX_ENV: test
+      steps:
+        - checkout
+        - setup_childchain
+        - run:
+            name: Integration Tests & Coveralls Part Watcher
+            environment:
+              DOCKER_GETH: true
+            command: |
+              mix test test/omg_watcher/integration/in_flight_exit_test_3_test.exs --include mix_based_child_chain
+
   watcher_info_coveralls_and_integration_tests:
     executor: builder_pg_geth
     environment:
@@ -1092,6 +1107,8 @@ workflows:
       - watcher_mix_based_childchain_7:
           filters: *all_branches_and_tags
       - watcher_mix_based_childchain_8:
+          filters: *all_branches_and_tags
+      - watcher_mix_based_childchain_9:
           filters: *all_branches_and_tags
       - publish_watcher:
           requires:
