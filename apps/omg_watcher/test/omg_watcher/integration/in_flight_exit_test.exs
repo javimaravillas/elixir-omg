@@ -41,26 +41,6 @@ defmodule OMG.Watcher.Integration.InFlightExitTest do
   # bumping the timeout to three minutes for the tests here, as they do a lot of transactions to Ethereum to test
   @moduletag timeout: 180_000
 
-  @tag fixtures: [:in_beam_watcher, :alice, :bob, :mix_based_child_chain, :token, :alice_deposits]
-  test "honest and cooperating users exit in-flight transaction",
-       %{alice: alice, bob: bob, alice_deposits: {deposit_blknum, _}} do
-    DevHelper.import_unlock_fund(bob)
-
-    tx = OMG.TestHelper.create_signed([{deposit_blknum, 0, 0, alice}], @eth, [{alice, 4}, {bob, 5}])
-    ife1 = tx |> Transaction.Signed.encode() |> WatcherHelper.get_in_flight_exit()
-
-    %{"blknum" => blknum} = tx |> Transaction.Signed.encode() |> WatcherHelper.submit()
-    IntegrationTest.wait_for_block_fetch(blknum, @timeout)
-
-    _ = exit_in_flight_and_wait_for_ife(ife1, alice)
-
-    assert %{"in_flight_exits" => [ife]} = WatcherHelper.success?("/status.get")
-    assert is_map(ife)
-    _ = piggyback_and_process_exits(tx, 1, :output, bob)
-
-    assert %{"in_flight_exits" => [], "byzantine_events" => []} = WatcherHelper.success?("/status.get")
-  end
-
   # NOTE: if https://github.com/omisego/elixir-omg/issues/994 is taken care of, this behavior will change, see comments
   #       therein.
   @tag fixtures: [:in_beam_watcher, :alice, :bob, :mix_based_child_chain, :token, :alice_deposits]
